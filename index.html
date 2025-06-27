@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Tracker Dashboard</title>
+
+  <!-- 💅 CSS -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- 📊 Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- 🔷 Header -->
+  <header>
+    <h1>💹 Crypto Tracker Dashboard</h1>
+    <div class="theme-toggle">
+      <button id="light-mode">☀️</button>
+      <button id="dark-mode">🌙</button>
+    </div>
+  </header>
+
+  <!-- 🔍 Controls -->
+  <section class="controls">
+    <label>
+      🔍
+      <input type="text" id="searchInput" placeholder="Search cryptocurrencies..." />
+    </label>
+
+    <select id="sortSelect">
+      <option value="market_cap">📊 Sort by Market Cap</option>
+      <option value="price">💰 Sort by Price</option>
+      <option value="change">📈 Sort by 24h % Change</option>
+    </select>
+
+    <select id="currencySelect">
+      <option value="usd">💵 USD</option>
+      <option value="inr">🇮🇳 INR</option>
+    </select>
+  </section>
+
+  <!-- 🔁 Loader -->
+  <div id="loader" class="loader">⏳ Loading coins...</div>
+
+  <!-- 🪙 Coin Cards Container -->
+  <main id="coinContainer">
+    <!-- Coins will be inserted here via JS -->
+  </main>
+
+  <!-- ⭐ Watchlist -->
+  <section id="watchlist-section">
+    <h2>⭐ Watchlist</h2>
+    <div id="watchlistContainer"></div>
+  </section>
+
+  <!-- 📈 Chart Area -->
+  <section id="chartSection" style="display:none; padding-top: 2rem;">
+    <h2 id="chartTitle">📊 Price Chart</h2>
+    <canvas id="priceChart" width="400" height="200"></canvas>
+  </section>
+
+  <!-- 🔻 Footer -->
+  <footer>
+    <p>© 2025 CryptoVision by Dhruv Pandit</p>
+  </footer>
+
+  <!-- 📜 JavaScript -->
+  <script src="chart.js"></script> <!-- Optional: only if you split chart logic -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>

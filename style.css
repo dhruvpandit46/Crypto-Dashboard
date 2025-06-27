@@ -1,0 +1,175 @@
+:root {
+  --bg: #0a0a0a;
+  --text: #e6e6e6;
+  --card: #161616;
+  --accent: #00ffff; /* neon cyan like XLR8 */
+  --accent-dark: #00bbbb;
+  --shadow: rgba(0, 255, 255, 0.2);
+}
+
+body.dark {
+  --bg: #000000;
+  --text: #ffffff;
+  --card: #111111;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+  padding: 1rem;
+}
+
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 1.8rem;
+}
+
+/* Theme Toggle Buttons */
+.theme-toggle button {
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  transition: transform 0.2s;
+}
+.theme-toggle button:hover {
+  transform: scale(1.2);
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.controls input,
+.controls select {
+  padding: 0.6rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--card);
+  color: var(--text);
+}
+
+/* Loader */
+.loader {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* Coin Cards */
+#coinContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.coin-card {
+  background-color: var(--card);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px var(--shadow);
+  transition: transform 0.2s;
+}
+
+.coin-card:hover {
+  transform: scale(1.02);
+}
+
+.coin-card h3 {
+  margin-bottom: 0.5rem;
+}
+
+.coin-card p {
+  margin: 0.2rem 0;
+}
+
+.price-up {
+  color: #00ff6a;
+}
+
+.price-down {
+  color: #ff4242;
+}
+
+/* Neon Button */
+button {
+  background-color: var(--accent);
+  color: #000;
+  padding: 8px 14px;
+  margin-top: 0.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--accent);
+  transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: var(--accent-dark);
+  transform: translateY(-2px);
+}
+
+/* Chart Section */
+#chartSection {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 0 10px var(--shadow);
+}
+
+/* Footer */
+footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+
+.range-btn, .close-btn {
+  margin-left: 0.3rem;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: var(--accent-dark);
+  color: #000;
+  box-shadow: 0 0 6px var(--shadow);
+}
+
+.range-btn:hover,
+.close-btn:hover {
+  background-color: var(--accent);
+}
