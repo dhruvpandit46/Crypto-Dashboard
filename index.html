@@ -10,6 +10,7 @@
 </head>
 <body>
 
+  <!-- 🔥 Header -->
   <header>
     <h1>📊 Crypto Dashboard</h1>
     <div class="theme-toggle">
@@ -18,6 +19,7 @@
     </div>
   </header>
 
+  <!-- 🔍 Filters -->
   <section class="controls">
     <input type="text" id="searchInput" placeholder="🔍 Search by name or symbol..." />
     <select id="sortSelect">
@@ -31,26 +33,35 @@
     </select>
   </section>
 
+  <!-- ⏳ Loader -->
   <section id="loader" class="loader">⏳ Loading crypto data...</section>
 
+  <!-- 💰 Coin Grid -->
   <main>
     <section id="coinContainer" class="grid-container"></section>
   </main>
 
-  <!-- ✅ Fullscreen Chart Modal -->
+  <!-- 📈 Fullscreen Chart Modal -->
   <div id="chartModal" class="modal">
     <div class="modal-content">
       <h2 id="chartTitle">📈 Coin Price Chart
         <button class="close-btn" onclick="closeChart()">❌</button>
       </h2>
       <canvas id="priceChart" height="200"></canvas>
+      <div class="range-buttons">
+        <button class="range-btn" onclick="changeChartRange('7d')">7d</button>
+        <button class="range-btn" onclick="changeChartRange('30d')">30d</button>
+        <button class="range-btn" onclick="changeChartRange('1y')">1y</button>
+      </div>
     </div>
   </div>
 
+  <!-- 🧾 Footer -->
   <footer>
     <p>⚡ Live data powered by CoinGecko API</p>
   </footer>
 
+  <!-- 🚀 JS -->
   <script src="script.js"></script>
 </body>
 </html>
