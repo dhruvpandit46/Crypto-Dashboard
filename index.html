@@ -19,18 +19,23 @@
     </div>
   </header>
 
-  <!-- 🔍 Filters -->
+  <!-- 🔍 Filters + Watchlist Toggle -->
   <section class="controls">
     <input type="text" id="searchInput" placeholder="🔍 Search by name or symbol..." />
+    
     <select id="sortSelect">
       <option value="marketcap">Sort by Market Cap</option>
       <option value="price">Sort by Price</option>
       <option value="change">Sort by 24h Change</option>
     </select>
+    
     <select id="currencySelect">
       <option value="usd">USD ($)</option>
       <option value="inr">INR (₹)</option>
     </select>
+
+    <!-- 👁️ Watchlist Toggle Button -->
+    <button id="watchlistToggle">👁️ Show Watchlist</button>
   </section>
 
   <!-- ⏳ Loader -->
