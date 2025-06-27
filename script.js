@@ -101,7 +101,9 @@ function displayCoins(data) {
 function loadChart(coinId, coinName, range = '7d') {
   const ranges = { '7d': 7, '30d': 30, '1y': 365 };
 
-  chartModal.style.display = 'flex';
+  // ✅ Show modal using class
+  chartModal.classList.add('show');
+
   chartTitle.innerHTML = `
     📊 ${coinName} Price Chart 
     <span style="float:right;">
@@ -156,7 +158,8 @@ function loadChart(coinId, coinName, range = '7d') {
 }
 
 function closeChart() {
-  chartModal.style.display = 'none';
+  // ✅ Hide modal using class
+  chartModal.classList.remove('show');
   if (chartInstance) {
     chartInstance.destroy();
     chartInstance = null;
