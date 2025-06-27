@@ -11,6 +11,7 @@ const chartCanvas = document.getElementById('priceChart');
 let coins = [];
 let currency = 'usd';
 let chartInstance = null;
+let showWatchlistOnly = false; // ✅ flag for watchlist toggle
 
 // 🌙 Theme toggle
 if (localStorage.getItem('theme') === 'dark') {
@@ -59,6 +60,20 @@ function toggleWatchlist(id) {
   displayCoins(coins);
 }
 
+// 👁️ Toggle Watchlist View
+document.addEventListener('DOMContentLoaded', () => {
+  const toggleBtn = document.createElement('button');
+  toggleBtn.id = 'watchlistToggle';
+  toggleBtn.innerText = '⭐ Show Watchlist';
+  document.querySelector('.controls').appendChild(toggleBtn);
+
+  toggleBtn.addEventListener('click', () => {
+    showWatchlistOnly = !showWatchlistOnly;
+    toggleBtn.innerText = showWatchlistOnly ? '📋 Show All Coins' : '⭐ Show Watchlist';
+    displayCoins(coins);
+  });
+});
+
 // 💹 Show coins
 function displayCoins(data) {
   coinContainer.innerHTML = '';
@@ -67,6 +82,12 @@ function displayCoins(data) {
     c.name.toLowerCase().includes(search) || c.symbol.toLowerCase().includes(search)
   );
 
+  // ✅ Filter for watchlist view
+  if (showWatchlistOnly) {
+    const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+    filtered = filtered.filter(c => watchlist.includes(c.id));
+  }
+
   const sort = sortSelect.value;
   if (sort === 'price') {
     filtered.sort((a, b) => b.current_price - a.current_price);
@@ -74,6 +95,11 @@ function displayCoins(data) {
     filtered.sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
   } else {
     filtered.sort((a, b) => b.market_cap - a.market_cap);
+  }
+
+  if (filtered.length === 0) {
+    coinContainer.innerHTML = `<p>🙁 No coins found for current filters.</p>`;
+    return;
   }
 
   filtered.forEach(coin => {
@@ -92,7 +118,6 @@ function displayCoins(data) {
       <button onclick="toggleWatchlist('${coin.id}')">${star} Watchlist</button>
       <button onclick="loadChart('${coin.id}', '${coin.name}')">📊 View Chart</button>
     `;
-
     coinContainer.appendChild(div);
   });
 }
@@ -101,9 +126,7 @@ function displayCoins(data) {
 function loadChart(coinId, coinName, range = '7d') {
   const ranges = { '7d': 7, '30d': 30, '1y': 365 };
 
-  // ✅ Show modal using class
   chartModal.classList.add('show');
-
   chartTitle.innerHTML = `
     📊 ${coinName} Price Chart 
     <span style="float:right;">
@@ -158,7 +181,6 @@ function loadChart(coinId, coinName, range = '7d') {
 }
 
 function closeChart() {
-  // ✅ Hide modal using class
   chartModal.classList.remove('show');
   if (chartInstance) {
     chartInstance.destroy();
