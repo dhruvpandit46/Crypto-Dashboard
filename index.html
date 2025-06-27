@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>🚀 Crypto Tracker Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- ✅ Corrected Chart.js version (no ES module!) -->
+  <!-- ✅ Chart.js (no ES module!) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 </head>
 <body>
@@ -37,10 +37,15 @@
     <section id="coinContainer" class="grid-container"></section>
   </main>
 
-  <section id="chartSection" style="display:none;">
-    <h2 id="chartTitle">📈 Coin Price Chart</h2>
-    <canvas id="priceChart" height="200"></canvas>
-  </section>
+  <!-- ✅ Fullscreen Chart Modal -->
+  <div id="chartModal" class="modal">
+    <div class="modal-content">
+      <h2 id="chartTitle">📈 Coin Price Chart
+        <button class="close-btn" onclick="closeChart()">❌</button>
+      </h2>
+      <canvas id="priceChart" height="200"></canvas>
+    </div>
+  </div>
 
   <footer>
     <p>⚡ Live data powered by CoinGecko API</p>
