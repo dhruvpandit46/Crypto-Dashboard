@@ -9,9 +9,9 @@ const watchlistContainer = document.getElementById('watchlistContainer');
 
 let coins = [];
 let currency = 'usd';
-let chart; // Chart.js instance
+let chartInstance = null;
 
-// 🌙 Theme toggle persistence
+// 🌙 Theme toggle
 if (localStorage.getItem('theme') === 'dark') {
   document.body.classList.add('dark');
 }
@@ -26,7 +26,7 @@ document.getElementById('light-mode').onclick = () => {
   localStorage.setItem('theme', 'light');
 };
 
-// 🪙 Fetch live coins data
+// 🔁 Fetch live data
 async function fetchCoins() {
   loader.style.display = 'block';
   try {
@@ -41,16 +41,31 @@ async function fetchCoins() {
   loader.style.display = 'none';
 }
 
-// 🔍 Render all coin cards
+// 🧠 Watchlist check
+function isInWatchlist(id) {
+  const list = JSON.parse(localStorage.getItem('watchlist')) || [];
+  return list.includes(id);
+}
+
+function toggleWatchlist(id) {
+  let list = JSON.parse(localStorage.getItem('watchlist')) || [];
+  if (list.includes(id)) {
+    list = list.filter(c => c !== id);
+  } else {
+    list.push(id);
+  }
+  localStorage.setItem('watchlist', JSON.stringify(list));
+  displayCoins(coins);
+}
+
+// 💹 Show coins
 function displayCoins(data) {
   coinContainer.innerHTML = '';
   const search = searchInput.value.toLowerCase();
-
   let filtered = data.filter(c =>
     c.name.toLowerCase().includes(search) || c.symbol.toLowerCase().includes(search)
   );
 
-  // Sorting logic
   const sort = sortSelect.value;
   if (sort === 'price') {
     filtered.sort((a, b) => b.current_price - a.current_price);
@@ -60,11 +75,9 @@ function displayCoins(data) {
     filtered.sort((a, b) => b.market_cap - a.market_cap);
   }
 
-  // Render each coin card
   filtered.forEach(coin => {
     const div = document.createElement('div');
     div.className = 'coin-card';
-
     const change = coin.price_change_percentage_24h;
     const isUp = change >= 0;
     const star = isInWatchlist(coin.id) ? '⭐' : '☆';
@@ -83,72 +96,68 @@ function displayCoins(data) {
   });
 }
 
-// ⭐ Watchlist toggle
-function toggleWatchlist(id) {
-  let list = JSON.parse(localStorage.getItem('watchlist')) || [];
-  if (list.includes(id)) {
-    list = list.filter(c => c !== id);
-  } else {
-    list.push(id);
-  }
-  localStorage.setItem('watchlist', JSON.stringify(list));
-  displayCoins(coins);
-}
-
-// 🧠 Check if coin is in watchlist
-function isInWatchlist(id) {
-  const list = JSON.parse(localStorage.getItem('watchlist')) || [];
-  return list.includes(id);
-}
-
-// 📊 Load 7-day chart
-async function loadChart(coinId, coinName) {
+// 📈 Load chart
+function loadChart(coinId, coinName, range = '7d') {
+  const ranges = { '7d': 7, '30d': 30, '1y': 365 };
   chartSection.style.display = 'block';
-  chartTitle.textContent = `📊 7-Day Price Chart: ${coinName}`;
+  chartTitle.innerHTML = `
+    📊 ${coinName} Price Chart 
+    <span style="float:right;">
+      <button class="range-btn" onclick="loadChart('${coinId}', '${coinName}', '7d')">7d</button>
+      <button class="range-btn" onclick="loadChart('${coinId}', '${coinName}', '30d')">30d</button>
+      <button class="range-btn" onclick="loadChart('${coinId}', '${coinName}', '1y')">1y</button>
+      <button class="close-btn" onclick="closeChart()">❌</button>
+    </span>
+  `;
 
-  try {
-    const res = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${currency}&days=7`
-    );
-    const data = await res.json();
+  fetch(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${currency}&days=${ranges[range]}`)
+    .then(res => res.json())
+    .then(data => {
+      const labels = data.prices.map(p => {
+        const d = new Date(p[0]);
+        return `${d.getDate()}/${d.getMonth() + 1}`;
+      });
+      const prices = data.prices.map(p => p[1]);
 
-    const labels = data.prices.map(p => {
-      const date = new Date(p[0]);
-      return `${date.getDate()}/${date.getMonth() + 1}`;
-    });
-    const prices = data.prices.map(p => p[1]);
+      if (chartInstance) chartInstance.destroy();
+      const ctx = document.getElementById("priceChart").getContext("2d");
 
-    if (chart) chart.destroy();
-
-    const ctx = document.getElementById("priceChart").getContext("2d");
-    chart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels,
-        datasets: [{
-          label: `${coinName} Price`,
-          data: prices,
-          borderColor: "#00ffff",
-          backgroundColor: "rgba(0,255,255,0.1)",
-          tension: 0.3,
-          fill: true
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          tooltip: { enabled: true }
+      chartInstance = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels,
+          datasets: [{
+            label: `${coinName} (${range})`,
+            data: prices,
+            borderColor: "#00ffff",
+            backgroundColor: "rgba(0,255,255,0.1)",
+            tension: 0.3,
+            fill: true
+          }]
         },
-        scales: {
-          x: { display: true },
-          y: { display: true }
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: true }
+          },
+          scales: {
+            x: { display: true },
+            y: { display: true }
+          }
         }
-      }
+      });
+    })
+    .catch(() => {
+      chartSection.innerHTML = `<p>⚠️ Failed to load chart.</p>`;
     });
+}
 
-  } catch (err) {
-    chartSection.innerHTML = `<p>⚠️ Failed to load chart.</p>`;
+function closeChart() {
+  chartSection.style.display = 'none';
+  if (chartInstance) {
+    chartInstance.destroy();
+    chartInstance = null;
   }
 }
 
@@ -163,5 +172,5 @@ currencySelect.addEventListener('change', () => {
 // 🔁 Refresh every 60s
 setInterval(fetchCoins, 60000);
 
-// 🚀 Initial run
+// 🚀 Start
 fetchCoins();
