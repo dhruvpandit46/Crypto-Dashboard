@@ -3,9 +3,10 @@ const searchInput = document.getElementById('searchInput');
 const sortSelect = document.getElementById('sortSelect');
 const currencySelect = document.getElementById('currencySelect');
 const loader = document.getElementById('loader');
-const chartSection = document.getElementById('chartSection');
+
+const chartModal = document.getElementById('chartModal');
 const chartTitle = document.getElementById('chartTitle');
-const watchlistContainer = document.getElementById('watchlistContainer');
+const chartCanvas = document.getElementById('priceChart');
 
 let coins = [];
 let currency = 'usd';
@@ -96,10 +97,11 @@ function displayCoins(data) {
   });
 }
 
-// 📈 Load chart
+// 📈 Load chart inside modal
 function loadChart(coinId, coinName, range = '7d') {
   const ranges = { '7d': 7, '30d': 30, '1y': 365 };
-  chartSection.style.display = 'block';
+
+  chartModal.style.display = 'flex';
   chartTitle.innerHTML = `
     📊 ${coinName} Price Chart 
     <span style="float:right;">
@@ -120,7 +122,7 @@ function loadChart(coinId, coinName, range = '7d') {
       const prices = data.prices.map(p => p[1]);
 
       if (chartInstance) chartInstance.destroy();
-      const ctx = document.getElementById("priceChart").getContext("2d");
+      const ctx = chartCanvas.getContext("2d");
 
       chartInstance = new Chart(ctx, {
         type: "line",
@@ -149,12 +151,12 @@ function loadChart(coinId, coinName, range = '7d') {
       });
     })
     .catch(() => {
-      chartSection.innerHTML = `<p>⚠️ Failed to load chart.</p>`;
+      chartTitle.innerHTML = `<p>⚠️ Failed to load chart.</p>`;
     });
 }
 
 function closeChart() {
-  chartSection.style.display = 'none';
+  chartModal.style.display = 'none';
   if (chartInstance) {
     chartInstance.destroy();
     chartInstance = null;
