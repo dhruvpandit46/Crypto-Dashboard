@@ -2,71 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crypto Tracker Dashboard</title>
-
-  <!-- 💅 CSS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🚀 Crypto Tracker Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- 📊 Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <!-- 🔷 Header -->
+
   <header>
-    <h1>💹 Crypto Tracker Dashboard</h1>
+    <h1>📊 Crypto Dashboard</h1>
     <div class="theme-toggle">
-      <button id="light-mode">☀️</button>
-      <button id="dark-mode">🌙</button>
+      <button id="dark-mode">🌙 Dark</button>
+      <button id="light-mode">☀️ Light</button>
     </div>
   </header>
 
-  <!-- 🔍 Controls -->
   <section class="controls">
-    <label>
-      🔍
-      <input type="text" id="searchInput" placeholder="Search cryptocurrencies..." />
-    </label>
-
+    <input type="text" id="searchInput" placeholder="🔍 Search by name or symbol..." />
     <select id="sortSelect">
-      <option value="market_cap">📊 Sort by Market Cap</option>
-      <option value="price">💰 Sort by Price</option>
-      <option value="change">📈 Sort by 24h % Change</option>
+      <option value="marketcap">Sort by Market Cap</option>
+      <option value="price">Sort by Price</option>
+      <option value="change">Sort by 24h Change</option>
     </select>
-
     <select id="currencySelect">
-      <option value="usd">💵 USD</option>
-      <option value="inr">🇮🇳 INR</option>
+      <option value="usd">USD ($)</option>
+      <option value="inr">INR (₹)</option>
     </select>
   </section>
 
-  <!-- 🔁 Loader -->
-  <div id="loader" class="loader">⏳ Loading coins...</div>
+  <section id="loader" class="loader">⏳ Loading crypto data...</section>
 
-  <!-- 🪙 Coin Cards Container -->
-  <main id="coinContainer">
-    <!-- Coins will be inserted here via JS -->
+  <main>
+    <section id="coinContainer" class="grid-container"></section>
   </main>
 
-  <!-- ⭐ Watchlist -->
-  <section id="watchlist-section">
-    <h2>⭐ Watchlist</h2>
-    <div id="watchlistContainer"></div>
+  <section id="chartSection" style="display:none;">
+    <h2 id="chartTitle">📈 Coin Price Chart</h2>
+    <canvas id="priceChart" height="200"></canvas>
   </section>
 
-  <!-- 📈 Chart Area -->
-  <section id="chartSection" style="display:none; padding-top: 2rem;">
-    <h2 id="chartTitle">📊 Price Chart</h2>
-    <canvas id="priceChart" width="400" height="200"></canvas>
-  </section>
-
-  <!-- 🔻 Footer -->
   <footer>
-    <p>© 2025 CryptoVision by Dhruv Pandit</p>
+    <p>⚡ Live data powered by CoinGecko API</p>
   </footer>
 
-  <!-- 📜 JavaScript -->
-  <script src="chart.js"></script> <!-- Optional: only if you split chart logic -->
-  <script type="module" src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
